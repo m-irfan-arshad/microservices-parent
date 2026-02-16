@@ -6,13 +6,14 @@
 # Get the project root directory (parent of scripts folder)
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 echo "$PROJECT_ROOT"
-cd "$PROJECT_ROOT" || exit 1
-echo "Starting Docker Compose in: $PROJECT_ROOT"
+DOCKER_DIR="$PROJECT_ROOT/docker"
+cd "$DOCKER_DIR" || exit 1
+echo "Starting Docker Compose in: DOCKER_DIR"
 echo "--------------------------------------"
 
 # Check if docker-compose.yml or compose.yaml exists
 if [ ! -f "docker-compose.yml" ] && [ ! -f "docker-compose.yaml" ] && [ ! -f "compose.yml" ] && [ ! -f "compose.yaml" ]; then
-    echo "✗ Error: No Docker Compose file found in $PROJECT_ROOT"
+    echo "✗ Error: No Docker Compose file found in DOCKER_DIR"
     echo "Expected one of: docker-compose.yml, docker-compose.yaml, compose.yml, compose.yaml"
     exit 1
 fi

@@ -7,7 +7,8 @@
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 
 # Change to project root directory
-cd "$PROJECT_ROOT" || exit 1
+DOCKER_DIR="$PROJECT_ROOT/docker"
+cd "$DOCKER_DIR" || exit 1
 
 echo "Stopping Docker Compose in: $PROJECT_ROOT"
 echo "--------------------------------------"

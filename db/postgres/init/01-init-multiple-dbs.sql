@@ -1,0 +1,7 @@
+CREATE DATABASE auth_db;
+CREATE DATABASE users_db;
+
+CREATE USER admin WITH ENCRYPTED PASSWORD 'admin';
+
+GRANT ALL PRIVILEGES ON DATABASE auth_db, users_db TO admin;
+
