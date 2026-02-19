@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="com.obiscr.chatgpt.settings.EasyCodeState">
+    <option name="projectFiles" value="$PROJECT_DIR$/auth-service/src/main/java/com/irfan/microservices/authservice/AuthServiceApplication.java;/Users/irfanarshad/Downloads/Document/JAVA/microservices-parent/microservices-parent/auth-service/src/test/java/com/irfan/microservices/authservice/AuthServiceApplicationTests.java;/Users/irfanarshad/Downloads/Document/JAVA/microservices-parent/microservices-parent/docker/docker-compose.yaml;/Users/irfanarshad/Downloads/Document/JAVA/microservices-parent/microservices-parent/postgres/init/01-init-multiple-dbs.sql;/Users/irfanarshad/Downloads/Document/JAVA/microservices-parent/microservices-parent/user-service/src/main/java/com/irfan/microservices/userservice/UserServiceApplication.java;/Users/irfanarshad/Downloads/Document/JAVA/microservices-parent/microservices-parent/user-service/src/test/java/com/irfan/microservices/userservice/UserServiceApplicationTests.java" />
+  </component>
+</project>

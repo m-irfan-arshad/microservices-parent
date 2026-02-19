@@ -1,37 +1,77 @@
 services:
-  auth-service-db:
-    container_name: postgres-auth-service
+  postgres:
+    container_name: postgres-microservices
     image: postgres:18
     environment:
-      POSTGRES_DB: ${POSTGRES_DB_AUTH}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_USER: ${POSTGRES_USER}
     ports:
       - '5433:5432'
     volumes:
       - postgres_data:/var/lib/postgresql
+      - ../postgres/init:/docker-entrypoint-initdb.d
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U admin -d ${POSTGRES_DB_AUTH}" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER}" ]
       interval: 10s
       timeout: 5s
       retries: 5
-
-  user-service-db:
-    container_name: postgres-users-service
-    image: postgres:18
+  auth-service:
+    container_name: auth-service
+    build:
+      context: ../auth-service
+      dockerfile: Dockerfile
     environment:
-      POSTGRES_DB: ${POSTGRES_DB_USERS}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_USER: ${POSTGRES_USER}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB_AUTH}
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.PostgreSQLDialect
+      SPRING_JPA_SHOW_SQL: 'true'
+      SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL: 'true'
+      SPRING_APPLICATION_NAME: auth-service
+      SERVER_PORT: 8080
+      SPRING_LIQUIBASE_ENABLED: 'true'
+     # SPRING_PROFILES_ACTIVE: docker
+     # LOGGING_LEVEL_ROOT: DEBUG
+     # LOGGING_LEVEL_ORG_SPRINGFRAMEWORK: DEBUG
+     # LOGGING_LEVEL_COM_EXAMPLE: DEBUG
+     # LOGGING_LEVEL_ORG_HIBERNATE: DEBUG
+     # LOGGING_LEVEL_ORG_HIBERNATE_SQL: DEBUG
+     # LOGGING_LEVEL_ORG_HIBERNATE_TYPE: TRACE
+     # LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_WEB: DEBUG
+     # LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_BOOT: DEBUG
+     # LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_DATA_JPA: DEBUG
+     # LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY: DEBUG
+     # LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_TRANSACTION: DEBUG
+     # LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_BEANS: DEBUG
+
     ports:
-      - '5434:5432'
-    volumes:
-      - users_data:/var/lib/postgresql
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U admin -d ${POSTGRES_DB_USERS}" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      - '8080:8080'
+    depends_on:
+      - postgres
+  user-service:
+    container_name: user-service
+    build:
+      context: ../user-service
+      dockerfile: Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB_USERS}
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.PostgreSQLDialect
+      SPRING_JPA_SHOW_SQL: 'true'
+      SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL: 'true'
+      SPRING_APPLICATION_NAME: users-service
+      SERVER_PORT: 8081
+      SPRING_LIQUIBASE_ENABLED: 'true'
+
+    ports:
+      - '8081:8081'
+    depends_on:
+      - postgres
 
   pgadmin:
     container_name: pgadmin
@@ -44,10 +84,8 @@ services:
     volumes:
       - pgadmin_data:/var/lib/pgadmin
     depends_on:
-      - auth-service-db
-      - user-service-db
+      - postgres
 
 volumes:
   postgres_data:
   pgadmin_data:
-  users_data:

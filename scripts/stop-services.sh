@@ -24,7 +24,7 @@ echo "✓ Docker Compose file found"
 echo ""
 
 # Stop and remove containers
-docker compose down
+docker compose down -v
 
 # Check if the command was successful
 if [ $? -eq 0 ]; then

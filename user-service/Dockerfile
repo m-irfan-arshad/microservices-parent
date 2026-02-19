@@ -70,8 +70,8 @@ RUN adduser \
 USER appuser
 
 # Copy the executable from the "package" stage.
-COPY --from=package build/target/app.jar app.jar
+COPY --from=package build/target/*.jar app.jar
 
-EXPOSE 8080
+EXPOSE 8081
 
 ENTRYPOINT [ "java", "-jar", "app.jar" ]
