@@ -12,33 +12,15 @@ echo "Starting Docker Compose in: DOCKER_DIR"
 echo "--------------------------------------"
 
 # Check if docker-compose.yml or compose.yaml exists
-if [ ! -f "docker-compose.yml" ] && [ ! -f "docker-compose.yaml" ] && [ ! -f "compose.yml" ] && [ ! -f "compose.yaml" ]; then
+if [ ! -f "docker-compose_dev.yml" ] && [ ! -f "docker-compose_dev.yaml" ] && [ ! -f "compose_dev.yml" ] && [ ! -f "compose_dev.yaml" ]; then
     echo "✗ Error: No Docker Compose file found in DOCKER_DIR"
     echo "Expected one of: docker-compose.yml, docker-compose.yaml, compose.yml, compose.yaml"
     exit 1
 fi
 echo "✓ Docker Compose file found"
 echo ""
-ENV_FILE="$DOCKER_DIR/.env"
-if [ -f "$ENV_FILE" ]; then
-    echo "✓ .env file found"
-    echo "Loading environment variables from .env file..."
-    # Load environment variables from .env file
-#    set -o allexport
-#    source "$ENV_FILE"
-#    set +o allexport
-#    echo "✓ Environment variables loaded"
-else
-    echo "✗ Warning: No .env file found in DOCKER_DIR"
-    echo "Make sure to create a .env file with necessary environment variables if required"
-fi
-echo "--------------------------------------"
-docker compose down -v
 # Run docker compose up
-docker compose \
-  -f docker-compose.yaml \
-  -f docker-compose.dev.yaml \
-  up --build
+docker compose -f docker-compose_dev.yaml up -d
 
 # Check if the command was successful
 if [ $? -eq 0 ]; then

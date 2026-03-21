@@ -1,0 +1,13 @@
+services:
+  auth-service:
+    build:
+      context: ../auth-service
+      dockerfile: Dockerfile
+      target: dev
+    container_name: auth-service
+    volumes:
+      - ../auth-service:/app
+      - ~/.m2:/root/.m2
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_DOCKER_COMPOSE_ENABLED: false
